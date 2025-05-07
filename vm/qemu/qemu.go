@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"syscall"
 
 	"github.com/google/syzkaller/pkg/config"
 	"github.com/google/syzkaller/pkg/log"
@@ -135,6 +136,7 @@ var archConfigs = map[string]*archConfig{
 		CmdLine: []string{
 			"root=/dev/sda",
 			"console=ttyS0",
+			"nokaslr",
 		},
 	},
 	"linux/386": {
@@ -409,6 +411,9 @@ func (pool *Pool) ctor(workdir, sshkey, sshuser string, index int) (*instance, e
 
 func (inst *instance) Close() error {
 	if inst.qemu != nil {
+		inst.qemu.Process.Signal(syscall.SIGTERM)
+		fmt.Fprintf(os.Stderr, "Sent SIGTERM to QEMU, waiting 10s for clean shutdown...\n")
+		time.Sleep(10*time.Second)
 		inst.qemu.Process.Kill()
 		inst.qemu.Wait()
 	}
