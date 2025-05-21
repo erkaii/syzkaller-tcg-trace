@@ -850,7 +850,7 @@ func (target *Target) Timeouts(slowdown int) Timeouts {
 	}
 	timeouts := target.timeouts
 	timeouts.Slowdown = slowdown
-	timeouts.Scale = min(time.Duration(slowdown), 3)
+	timeouts.Scale = min(time.Duration(slowdown), 10)
 	if timeouts.Syscall == 0 {
 		timeouts.Syscall = 50 * time.Millisecond
 	}
