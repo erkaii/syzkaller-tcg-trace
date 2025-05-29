@@ -159,6 +159,7 @@ var archConfigs = map[string]*archConfig{
 		CmdLine: []string{
 			"root=/dev/vda",
 			"console=ttyAMA0",
+			"nokaslr",
 		},
 	},
 	"linux/arm": {
